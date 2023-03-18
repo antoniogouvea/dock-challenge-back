@@ -1,0 +1,46 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""clients """
+type Clients {
+  _id: String!
+  name: String!
+  cpf: String!
+}
+
+type OperationsDto {
+  createAt: DateTime!
+  value: Int!
+  user: Int!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type AccountSummary {
+  agency: Int!
+  accountNumber: Int!
+  client: Clients!
+}
+
+type Operations {
+  createdAt: DateTime!
+  value: Float!
+  user: String!
+}
+
+"""users"""
+type Users {
+  _id: String!
+  name: String!
+  cpf: String!
+}
+
+type Query {
+  getAllAccounts: [AccountSummary!]!
+  getUsersById(id: String!): Users!
+  getUsersByCpf(cpf: String!): Users!
+}
