@@ -2,17 +2,17 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-"""clients """
+"""clients"""
 type Clients {
-  _id: String!
+  _id: String
   name: String!
   cpf: String!
 }
 
-type OperationsDto {
-  createAt: DateTime!
-  value: Int!
-  user: Int!
+type Operations {
+  createdAt: DateTime!
+  value: Float!
+  user: String!
 }
 
 """
@@ -20,16 +20,22 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type AccountSummary {
-  agency: Int!
-  accountNumber: Int!
+"""accounts"""
+type Accounts {
+  _id: String!
+  agency: Float!
+  accountNumber: Float!
   client: Clients!
+  balance: Float!
+  operations: [Operations!]!
 }
 
-type Operations {
-  createdAt: DateTime!
-  value: Float!
-  user: String!
+type AccountSummary {
+  _id: String!
+  agency: Float!
+  accountNumber: Float!
+  client: Clients!
+  balance: Float!
 }
 
 """users"""
@@ -43,4 +49,23 @@ type Query {
   getAllAccounts: [AccountSummary!]!
   getUsersById(id: String!): Users!
   getUsersByCpf(cpf: String!): Users!
+}
+
+type Mutation {
+  updateValueToAccount: Accounts!
+  createAccount(createAccountArgs: CreateAccountArgs!): Accounts!
+  addClient(newClientData: NewClientData!): Clients!
+}
+
+input CreateAccountArgs {
+  _id: String
+  agency: Int! = 123
+  accountNumber: Int! = 456
+  client: String! = "123"
+}
+
+input NewClientData {
+  _id: String!
+  cpf: String!
+  name: String!
 }
