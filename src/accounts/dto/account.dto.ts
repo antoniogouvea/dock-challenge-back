@@ -32,7 +32,7 @@ export class AccountArgs {
 
 @InputType()
 export class CreateAccountArgs {
-	@Field({nullable:true})
+	@Field({ nullable: true })
 	_id?: string
 
 	@Field(type => Int)
@@ -43,4 +43,19 @@ export class CreateAccountArgs {
 
 	@Field(type => String)
 	client = '123'
+}
+
+@InputType()
+export class ValueToUpdateArgs {
+	@Field(type => Number)
+	value: number
+
+	@Field()
+	transactionType: string
+
+	@Field()
+	user: string
+
+	@Field()
+	account: string
 }

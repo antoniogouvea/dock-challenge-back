@@ -4,17 +4,18 @@ import { Clients } from './clients.schema'
 
 export type AccountsDocument = HydratedDocument<Accounts>
 
+@Schema({ timestamps: true })
 export class Operations {
-	@Prop()
-	createdAt: Date
-
 	@Prop()
 	value: number
 
 	@Prop()
+	transactionType: string
+
+	@Prop()
 	user: string
 }
-
+export const OperationsSchema = SchemaFactory.createForClass(Operations)
 @Schema()
 export class Accounts {
 	@Prop()
@@ -23,8 +24,8 @@ export class Accounts {
 	@Prop()
 	accountNumber: number
 
-	@Prop({ ref: 'Clients' })
-	client: string
+	@Prop({ type: Types.ObjectId, ref: 'Clients' })
+	client: Types.ObjectId
 
 	@Prop()
 	_id: string

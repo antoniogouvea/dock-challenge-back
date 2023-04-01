@@ -10,7 +10,8 @@ export class ClientsService {
 	constructor(@InjectModel(Clients.name) private clientsModel: Model<ClientsDocument>) {}
 
 	async createOrUpdateClient(client: NewClientData): Promise<Clients> {
-		const newClient = { _id: client._id ? new Types.ObjectId(client?._id) : new Types.ObjectId(), ...client }
+		if (!client?._id) delete client._id
+		const newClient = { _id: !client._id ? new Types.ObjectId() : new Types.ObjectId(client?._id), ...client }
 		return await this.clientsModel
 			.findOneAndUpdate({ _id: newClient._id }, newClient, { new: true, upsert: true })
 			.exec()

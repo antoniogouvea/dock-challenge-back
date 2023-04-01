@@ -1,41 +1,53 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model, Types } from 'mongoose'
+import { Clients } from '../clients/models/clients.model'
 import { AccountsDocument, Accounts } from '../schemas/accounts.schema'
-import { CreateAccountArgs } from './dto/account.dto'
+import { newAccountAdapter } from './adapter/account.adapter'
+import { CreateAccountArgs, ValueToUpdateArgs } from './dto/account.dto'
 import { AccountSummary } from './models/accounts.model'
 
 @Injectable()
 export class AccountsService {
-	constructor(@InjectModel(Accounts.name) private accountsModel: Model<AccountsDocument>) {}
-	async findAll(): Promise<[AccountSummary]> {
-		return [
-			{
-				_id: '',
-				agency: 123,
-				accountNumber: 456,
-				balance: 42,
-				client: {
-					_id: '123',
-					cpf: '123',
-					name: 'john',
-				},
-			},
-		]
+	constructor(@InjectModel(Accounts.name) private accountsModel: Model<AccountsDocument>) { }
+	async findAll(): Promise<any> {
+		const a = await this.accountsModel.find().populate('client', 'name', 'Clients').select('-__v')
+		console.log("🚀 ~ file: accounts.service.ts:14 ~ AccountsService ~ findAll ~ a:", a)
+		return a
 	}
-	async calculateBalance() {}
+	async calculateBalance() { }
 
 	async createAccount(createAccountArgs: CreateAccountArgs): Promise<Accounts> {
+		console.log("🚀 ~ file: accounts.service.ts:34 ~ AccountsService ~ createAccount ~ !createAccountArgs?._id:", !createAccountArgs?._id)
+
 		if (!createAccountArgs?._id) delete createAccountArgs._id
-		const newAccount = {
-			_id: !createAccountArgs?._id
-				? new Types.ObjectId().toString()
-				: new Types.ObjectId(createAccountArgs?._id).toString(),
-			...createAccountArgs,
-		}
+		const newAccount = newAccountAdapter(createAccountArgs)
+		console.log("🚀 ~ file: accounts.service.ts:31 ~ AccountsService ~ createAccount ~ newAccount:", newAccount)
 
 		return await this.accountsModel
 			.findOneAndUpdate({ _id: newAccount._id }, newAccount, { new: true, upsert: true })
+			.populate('client', 'name', 'Clients')
 			.exec()
+	}
+
+	async updateValueToAccount(valueToUpdate: ValueToUpdateArgs): Promise<Accounts> {
+		const account = await this.accountsModel.findOne({ accountNumber: valueToUpdate.account }).lean()
+		const newBalance = this.checkOperation(valueToUpdate, account?.balance)
+
+		return await this.accountsModel
+			.findOneAndUpdate(
+				{ _id: account._id },
+				{ $push: { operations: valueToUpdate }, balance: newBalance },
+				{ new: true, upsert: true }
+			)
+			.exec()
+	}
+
+	private checkOperation(valuetoUpdate, balance) {
+		let total = 0
+		if (valuetoUpdate.transactionType === 'add') total = valuetoUpdate.value + balance
+		if (valuetoUpdate.transactionType === 'withdraw') total = balance - valuetoUpdate.value
+		console.log('🚀 ~ file: accounts.service.ts:67 ~ AccountsService ~ checkOperation ~ total:', total)
+		return total
 	}
 }

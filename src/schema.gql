@@ -52,9 +52,16 @@ type Query {
 }
 
 type Mutation {
-  updateValueToAccount: Accounts!
+  updateValueToAccount(valueToUpdateArgs: ValueToUpdateArgs!): Accounts!
   createAccount(createAccountArgs: CreateAccountArgs!): Accounts!
   addClient(newClientData: NewClientData!): Clients!
+}
+
+input ValueToUpdateArgs {
+  value: Float!
+  transactionType: String!
+  user: String!
+  account: String!
 }
 
 input CreateAccountArgs {
