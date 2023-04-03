@@ -11,18 +11,17 @@ import { AccountSummary } from './models/accounts.model'
 export class AccountsService {
 	constructor(@InjectModel(Accounts.name) private accountsModel: Model<AccountsDocument>) { }
 	async findAll(): Promise<any> {
-		const a = await this.accountsModel.find().populate('client', 'name', 'Clients').select('-__v')
-		console.log("🚀 ~ file: accounts.service.ts:14 ~ AccountsService ~ findAll ~ a:", a)
-		return a
+		return await this.accountsModel.find().select('-__v')
+	}
+
+	async findById(_id: string): Promise<any> {
+		return await this.accountsModel.findOne({ _id: new Types.ObjectId(_id) }).populate('client', 'name', 'Clients').select('-__v')
 	}
 	async calculateBalance() { }
 
 	async createAccount(createAccountArgs: CreateAccountArgs): Promise<Accounts> {
-		console.log("🚀 ~ file: accounts.service.ts:34 ~ AccountsService ~ createAccount ~ !createAccountArgs?._id:", !createAccountArgs?._id)
-
-		if (!createAccountArgs?._id) delete createAccountArgs._id
+		// if (!createAccountArgs?._id) delete createAccountArgs._id
 		const newAccount = newAccountAdapter(createAccountArgs)
-		console.log("🚀 ~ file: accounts.service.ts:31 ~ AccountsService ~ createAccount ~ newAccount:", newAccount)
 
 		return await this.accountsModel
 			.findOneAndUpdate({ _id: newAccount._id }, newAccount, { new: true, upsert: true })
@@ -37,7 +36,7 @@ export class AccountsService {
 		return await this.accountsModel
 			.findOneAndUpdate(
 				{ _id: account._id },
-				{ $push: { operations: valueToUpdate }, balance: newBalance },
+				{ $push: { operations: { _id: new Types.ObjectId(), ...valueToUpdate, createdAt: new Date() } }, balance: newBalance },
 				{ new: true, upsert: true }
 			)
 			.exec()
@@ -47,7 +46,6 @@ export class AccountsService {
 		let total = 0
 		if (valuetoUpdate.transactionType === 'add') total = valuetoUpdate.value + balance
 		if (valuetoUpdate.transactionType === 'withdraw') total = balance - valuetoUpdate.value
-		console.log('🚀 ~ file: accounts.service.ts:67 ~ AccountsService ~ checkOperation ~ total:', total)
 		return total
 	}
 }

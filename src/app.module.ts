@@ -10,6 +10,7 @@ import { ClientsModule } from './clients/clients.module'
 import { UsersModule } from './users/users.module'
 import { MongooseModule } from '@nestjs/mongoose'
 import { DatabaseConfig } from './config/database.config'
+import { AuthModule } from './auth/auth.module';
 
 const { NODE_ENV } = process.env
 const prod = !NODE_ENV || NODE_ENV === 'production'
@@ -28,6 +29,7 @@ const prod = !NODE_ENV || NODE_ENV === 'production'
 		}),
 		ClientsModule,
 		UsersModule,
+		AuthModule,
 	],
 	controllers: [],
 	providers: [],

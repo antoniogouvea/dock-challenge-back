@@ -1,13 +1,27 @@
-import { ArgsType, Field, Int } from '@nestjs/graphql'
+import { ArgsType, Field, InputType, Int, ObjectType } from '@nestjs/graphql'
 
-@ArgsType()
-export class UsersId {
+@InputType()
+class Client {
+
 	@Field()
-	id = '123'
+	"name": string
+	@Field()
+	"cpf": string
+
+}
+@InputType()
+export class CreateUserDto {
+
+	@Field()
+	name: string
+
+	@Field()
+	email: string
+
+	@Field()
+	password: string
+
 }
 
-@ArgsType()
-export class UsersCpf {
-	@Field()
-	cpf = '123'
-}
+// @ObjectType()
+// export class User 

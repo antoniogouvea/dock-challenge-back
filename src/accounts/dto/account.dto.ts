@@ -1,7 +1,5 @@
-import { ArgsType, Field, InputType, Int, ObjectType, OmitType, PartialType } from '@nestjs/graphql'
+import { Field, InputType, Int } from '@nestjs/graphql'
 import { NewClientData } from '../../clients/dto/clients.dto'
-import { Clients } from '../../clients/models/clients.model'
-import { Accounts } from '../models/accounts.model'
 
 @InputType()
 export class OperationsDto {
@@ -31,9 +29,17 @@ export class AccountArgs {
 }
 
 @InputType()
+class Client {
+
+	@Field()
+	"name": string
+	@Field()
+	"cpf": string
+
+}
+
+@InputType()
 export class CreateAccountArgs {
-	@Field({ nullable: true })
-	_id?: string
 
 	@Field(type => Int)
 	agency = 123
@@ -41,8 +47,8 @@ export class CreateAccountArgs {
 	@Field(type => Int)
 	accountNumber = 456
 
-	@Field(type => String)
-	client = '123'
+	@Field(type => Client)
+	client = Client
 }
 
 @InputType()

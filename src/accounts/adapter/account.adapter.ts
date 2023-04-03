@@ -2,11 +2,12 @@ import { Types } from "mongoose"
 
 export const newAccountAdapter = (newAccount) => {
     return {
-        _id: !newAccount?._id
-            ? new Types.ObjectId()
-            : new Types.ObjectId(newAccount?._id),
+        _id: new Types.ObjectId(),
         balance: 0,
-        client: new Types.ObjectId(newAccount?.client),
+        client: {
+            name: newAccount.client.name,
+            cpf: newAccount.client.cpf,
+        },
         accountNumber: newAccount.accountNumber,
         agency: newAccount.agency
     }

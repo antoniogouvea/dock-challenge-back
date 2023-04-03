@@ -1,8 +1,7 @@
-import { Directive, Field, ID, ObjectType } from '@nestjs/graphql'
-import { Types } from 'mongoose'
+import { Field, ObjectType } from '@nestjs/graphql'
 
 @ObjectType({ description: 'users' })
-export class Users {
+export class UsersModel {
 	@Field()
 	_id: string
 
@@ -10,5 +9,6 @@ export class Users {
 	name: string
 
 	@Field()
-	cpf: string
+	email: string
+
 }

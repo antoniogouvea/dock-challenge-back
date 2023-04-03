@@ -8,7 +8,9 @@ async function bootstrap() {
 	const configService = app.get(ConfigService)
 	const port = configService.get('PORT')
 	app.useGlobalPipes(new ValidationPipe())
-
+	app.enableCors({
+		origin: '*',
+	})
 	await app.listen(port)
 	console.log(`Application is running on: ${await app.getUrl()}`)
 }

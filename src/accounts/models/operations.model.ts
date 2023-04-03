@@ -2,6 +2,9 @@ import { Directive, Field, ID, ObjectType } from '@nestjs/graphql'
 
 @ObjectType()
 export class Operations {
+	@Field()
+	_id: string
+
 	@Field(type => Date)
 	createdAt: Date
 
@@ -10,4 +13,7 @@ export class Operations {
 
 	@Field()
 	user: string
+
+	@Field()
+	transactionType: string
 }
