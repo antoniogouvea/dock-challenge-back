@@ -1,0 +1,108 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""clients"""
+type Clients {
+  _id: String
+  name: String!
+  cpf: String!
+}
+
+type Operations {
+  _id: String!
+  createdAt: DateTime!
+  value: Float!
+  user: String!
+  transactionType: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+"""accounts"""
+type Accounts {
+  _id: String!
+  agency: Float!
+  accountNumber: Float!
+  client: Clients!
+  balance: Float!
+  operations: [Operations!]!
+}
+
+type AccountSummary {
+  _id: String!
+  agency: Float!
+  accountNumber: Float!
+  client: Clients!
+  balance: Float!
+}
+
+"""users"""
+type UsersModel {
+  _id: String!
+  name: String!
+  email: String!
+}
+
+type User {
+  _id: String!
+  email: String
+  name: String!
+}
+
+type AuthType {
+  user: User!
+  token: String!
+}
+
+type Query {
+  getAllAccounts: [AccountSummary!]!
+  getAccountById(id: String!): Accounts!
+  validateToken(token: String!): AuthType!
+}
+
+type Mutation {
+  updateValueToAccount(valueToUpdateArgs: ValueToUpdateArgs!): Accounts!
+  createAccount(createAccountArgs: CreateAccountArgs!): Accounts!
+  addClient(newClientData: NewClientData!): Clients!
+  createUser(createUser: CreateUserDto!): UsersModel!
+  login(data: AuthInput!): AuthType!
+}
+
+input ValueToUpdateArgs {
+  value: Float!
+  transactionType: String!
+  user: String!
+  account: String!
+}
+
+input CreateAccountArgs {
+  agency: Int! = 123
+  accountNumber: Int! = 456
+  client: Client!
+}
+
+input Client {
+  name: String!
+  cpf: String!
+}
+
+input NewClientData {
+  _id: String!
+  cpf: String!
+  name: String!
+}
+
+input CreateUserDto {
+  name: String!
+  email: String!
+  password: String!
+}
+
+input AuthInput {
+  email: String!
+  password: String!
+}
