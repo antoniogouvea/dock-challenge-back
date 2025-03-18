@@ -1,17 +1,14 @@
 ## Description
 
-Foi criado utilizando o Nestjs e graphql. Estou implementando também as chamadas em Rest. 
+It was created using Nestjs and graphql. I am also implementing the calls in Rest.
 
-Ele se encontra na AWS, [link](https://dock.tonyprojects.net/graphql) para a utilização do playground como teste
+It is located on AWS
 
-Estou terminando a implementação dos testes unitários. 
+All routes are protected by a Guard, which checks the validity of the token.
 
-Todas as rotas se encontram protegidas por um Guard, que checa a validade do token.
+It was implemented using a MongoDB in Atlas that is connected to the application in AWS.
 
-Foi implementado utilizando um MongoDB na Atlas que está conectado com a aplicação na AWS.
-
-Para criação das váriaveis de ambiente é necessário a passagem do valor do ambiente selecionado , por exemplo:
-
+To create the environment variables, it is necessary to pass the value of the selected environment, for example:
 ```bash
 $ touch environment/development.env
 $ npm run start:dev
